@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Silencio De Los dioses</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="particle-bg"></div>
@@ -49,7 +53,7 @@
             <div class="hero-content">
                 <div class="studio-name">ESQUIVEL STUDIO presenta</div>
                 <h1 class="game-title floating">El Silencio De Los dioses</h1>
-                <div class="studio-name">ESQUIVEL STUDIO BY DARKNESSDEV</div>
+                <div class="studio-name"> BY DARKNESSDEV</div>
                 
                 <div class="trailer-container">
                     <div class="trailer-placeholder" onclick="playTrailer()">
@@ -93,7 +97,6 @@
             <div class="social-section">
                 <h2 class="section-title">Síguenos para que estes actualizado de los avances</h2>
                 <div class="social-grid">
-            
                     <a href="#" class="social-link" title="TikTok">TikTok</a>
                     <a href="#" class="social-link" title="YouTube">YouTube</a>
                     <a href="#" class="social-link" title="Discord">Discord</a>
@@ -224,12 +227,17 @@
                     <span class="stat-label">Emails Registrados:</span>
                     <span class="stat-value" id="emailCount">0</span>
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">Estado Firebase:</span>
+                    <span class="stat-value" id="firebaseStatus">🔄 Conectando...</span>
+                </div>
             </div>
             <div id="emailList" class="email-list">
                 <!-- Los emails aparecerán aquí -->
             </div>
             <div class="admin-actions">
                 <button class="admin-btn" onclick="exportEmails()">📥 Exportar Emails</button>
+                <button class="admin-btn" onclick="syncEmails()">🔄 Sincronizar</button>
                 <button class="admin-btn danger" onclick="clearAllEmails()">🗑️ Limpiar Todo</button>
             </div>
         </div>
