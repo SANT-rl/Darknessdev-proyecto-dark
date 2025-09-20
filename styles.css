@@ -975,6 +975,11 @@ body {
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
+    
+    body {
+        font-family: 'Arial', sans-serif !important;
+    }
+    
     .desktop-nav {
         display: none;
     }
@@ -983,19 +988,13 @@ body {
         display: block;
     }
     
-   .logo,
+    /* Y también los títulos específicos */
+    .logo,
     .game-title,
     .section-title,
-    .modal-title,
-    .mobile-logo,
-    .news-title,
-    .studio-name {
+    .modal-title {
         font-family: 'Arial', sans-serif !important;
         font-weight: bold;
-    }
-    
-    body {
-        font-family: 'Arial', sans-serif !important;
     }
     
     .nav-container {
