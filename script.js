@@ -1,3 +1,27 @@
+const firebaseConfig = {
+    apiKey: "tu-api-key-real-aqui",
+    authDomain: "tu-project-id.firebaseapp.com", 
+    databaseURL: "https://el-silencio-de-los-dioses-default-rtdb.firebaseio.com",
+    projectId: "tu-project-id",
+    storageBucket: "tu-project-id.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abc123def456"
+};
+
+// Inicializar Firebase
+let database;
+let isFirebaseConnected = false;
+
+try {
+    firebase.initializeApp(firebaseConfig);
+    database = firebase.database();
+    isFirebaseConnected = true;
+    console.log('🔥 Firebase conectado exitosamente');
+} catch (error) {
+    console.error('🚫 Error conectando Firebase:', error);
+    isFirebaseConnected = false;
+}
+
 // ===== VARIABLES GLOBALES =====
 let registeredEmails = [];
 let selectedDonationAmount = 0;
@@ -14,18 +38,97 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    console.log('🗡️ Shadow Realms - Inicializando aplicación...');
+    console.log('🗡️ El Silencio De Los Dioses - Inicializando aplicación...');
     
-    // Verificar si hay datos guardados
-    const savedEmails = localStorage.getItem('shadowRealmsEmails');
-    if (savedEmails) {
-        try {
+    if (isFirebaseConnected) {
+        // Cargar emails desde Firebase
+        loadEmailsFromFirebase();
+    } else {
+        // Fallback: cargar desde localStorage
+        loadEmailsFromLocal();
+    }
+}
+
+// ===== FUNCIONES DE FIREBASE =====
+async function loadEmailsFromFirebase() {
+    try {
+        const emailsRef = database.ref('emails');
+        
+        emailsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Convertir objeto Firebase a array
+                registeredEmails = Object.values(data).map(item => item.email);
+                console.log(`🔥 ${registeredEmails.length} emails cargados desde Firebase`);
+                updateFirebaseStatus('🟢 Conectado');
+            } else {
+                registeredEmails = [];
+                updateFirebaseStatus('🟢 Conectado (vacío)');
+            }
+            updateAdminStats();
+        });
+        
+    } catch (error) {
+        console.error('🚫 Error cargando emails de Firebase:', error);
+        updateFirebaseStatus('🔴 Error');
+        // Fallback a localStorage
+        loadEmailsFromLocal();
+    }
+}
+
+async function saveEmailToFirebase(email) {
+    if (!isFirebaseConnected) {
+        throw new Error('Firebase no está conectado');
+    }
+    
+    try {
+        const emailData = {
+            email: email,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            date: new Date().toISOString()
+        };
+        
+        // Crear referencia única
+        const newEmailRef = database.ref('emails').push();
+        await newEmailRef.set(emailData);
+        
+        console.log('📧 Email guardado en Firebase:', email);
+        return true;
+    } catch (error) {
+        console.error('🚫 Error guardando email en Firebase:', error);
+        throw error;
+    }
+}
+
+function updateFirebaseStatus(status) {
+    const statusElement = document.getElementById('firebaseStatus');
+    if (statusElement) {
+        statusElement.textContent = status;
+    }
+}
+
+// ===== FUNCIONES DE BACKUP LOCAL =====
+function loadEmailsFromLocal() {
+    try {
+        const savedEmails = localStorage.getItem('elSilencioEmails');
+        if (savedEmails) {
             registeredEmails = JSON.parse(savedEmails);
-            console.log(`📧 ${registeredEmails.length} emails cargados desde almacenamiento local`);
-        } catch (error) {
-            console.error('Error al cargar emails:', error);
-            registeredEmails = [];
+            console.log(`💾 ${registeredEmails.length} emails cargados desde localStorage`);
         }
+        updateFirebaseStatus('🟡 Solo local');
+    } catch (error) {
+        console.error('Error cargando emails locales:', error);
+        registeredEmails = [];
+    }
+}
+
+function saveEmailToLocal(email) {
+    try {
+        registeredEmails.push(email);
+        localStorage.setItem('elSilencioEmails', JSON.stringify(registeredEmails));
+        console.log('💾 Email guardado localmente:', email);
+    } catch (error) {
+        console.error('Error guardando email localmente:', error);
     }
 }
 
@@ -62,11 +165,7 @@ function openModal(modalId) {
     if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        
-        // Cerrar menú móvil si está abierto
         closeMobileMenu();
-        
-        // Agregar event listener para cerrar con Escape
         document.addEventListener('keydown', handleModalKeyDown);
     }
 }
@@ -76,8 +175,6 @@ function closeModal(modalId) {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
-        
-        // Remover event listener
         document.removeEventListener('keydown', handleModalKeyDown);
     }
 }
@@ -91,7 +188,6 @@ function handleModalKeyDown(event) {
     }
 }
 
-// Cerrar modal al hacer clic fuera del contenido
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('modal')) {
         closeModal(event.target.id);
@@ -99,11 +195,10 @@ document.addEventListener('click', function(event) {
 });
 
 // ===== SISTEMA DE REGISTRO DE EMAILS =====
-function registerEmail(event) {
+async function registerEmail(event) {
     event.preventDefault();
     const emailInput = event.target.querySelector('.email-input');
     const email = emailInput.value.trim().toLowerCase();
-    const messageElement = document.getElementById('emailMessage');
     
     // Validación básica
     if (!isValidEmail(email)) {
@@ -113,21 +208,45 @@ function registerEmail(event) {
     
     // Verificar si el email ya está registrado
     if (registeredEmails.includes(email)) {
-        showEmailMessage('Este email ya está registrado en la Orden Sombría.', 'error');
+        showEmailMessage('Este email ya está registrado para el sorteo.', 'error');
         return;
     }
     
-    // Registrar email
-    registeredEmails.push(email);
-    saveEmails();
+    // Mostrar loading
+    showEmailMessage('Registrando email...', 'info');
     
-    // Mostrar mensaje de éxito
-    showEmailMessage('¡Bienvenido a la Orden Sombría! Te contactaremos pronto con noticias exclusivas y sorteos de armas legendarias.', 'success');
+    try {
+        if (isFirebaseConnected) {
+            // Guardar en Firebase
+            await saveEmailToFirebase(email);
+        } else {
+            // Guardar solo localmente
+            saveEmailToLocal(email);
+        }
+        
+        // Mostrar mensaje de éxito
+        const successMessage = isFirebaseConnected 
+            ? '¡Registrado exitosamente! Participarás en todos los sorteos y recibirás noticias exclusivas.'
+            : '¡Registrado localmente! Para participar en sorteos globales, intenta más tarde cuando tengamos conexión.';
+            
+        showEmailMessage(successMessage, 'success');
+        
+        // Limpiar formulario
+        emailInput.value = '';
+        
+    } catch (error) {
+        console.error('Error registrando email:', error);
+        
+        // Intentar guardar localmente como backup
+        try {
+            saveEmailToLocal(email);
+            showEmailMessage('Email guardado localmente. Se sincronizará cuando haya conexión.', 'success');
+            emailInput.value = '';
+        } catch (localError) {
+            showEmailMessage('Error al registrar email. Inténtalo de nuevo.', 'error');
+        }
+    }
     
-    // Limpiar formulario
-    emailInput.value = '';
-    
-    // Actualizar contador en panel admin si está visible
     updateAdminStats();
 }
 
@@ -142,45 +261,23 @@ function showEmailMessage(message, type) {
         messageElement.textContent = message;
         messageElement.className = `email-message ${type}`;
         
-        // Auto-ocultar después de 5 segundos
-        setTimeout(() => {
-            messageElement.className = 'email-message';
-        }, 5000);
-    }
-}
-
-function saveEmails() {
-    try {
-        localStorage.setItem('shadowRealmsEmails', JSON.stringify(registeredEmails));
-        console.log('📧 Emails guardados exitosamente');
-    } catch (error) {
-        console.error('Error al guardar emails:', error);
-    }
-}
-
-function loadEmails() {
-    try {
-        const savedEmails = localStorage.getItem('shadowRealmsEmails');
-        if (savedEmails) {
-            registeredEmails = JSON.parse(savedEmails);
+        // Auto-ocultar después de 5 segundos (excepto para loading)
+        if (type !== 'info') {
+            setTimeout(() => {
+                messageElement.className = 'email-message';
+            }, 5000);
         }
-    } catch (error) {
-        console.error('Error al cargar emails:', error);
-        registeredEmails = [];
     }
 }
 
 // ===== SISTEMA DE DONACIONES =====
 function selectAmount(button, amount) {
-    // Remover clase active de todos los botones
     document.querySelectorAll('.amount-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // Agregar clase active al botón seleccionado
     button.classList.add('active');
     selectedDonationAmount = amount;
-    
     console.log(`💰 Cantidad seleccionada: $${amount} USD`);
 }
 
@@ -188,14 +285,13 @@ function processDonation() {
     const linkInput = document.getElementById('donationLink');
     const link = linkInput.value.trim();
     
-    // Validaciones
     if (!selectedDonationAmount) {
         alert('⚠️ Por favor, selecciona una cantidad para donar.');
         return;
     }
     
     if (!link) {
-        alert('⚠️ Por favor, agrega un link de donación válido (PayPal, Ko-fi, Patreon, etc.).');
+        alert('⚠️ Por favor, agrega un link de donación válido.');
         linkInput.focus();
         return;
     }
@@ -206,21 +302,13 @@ function processDonation() {
         return;
     }
     
-    // Procesar donación
     try {
         window.open(link, '_blank');
-        
-        // Mostrar mensaje de agradecimiento
         const rewardMessage = getDonationReward(selectedDonationAmount);
-        alert(`🙏 ¡Gracias por tu donación de $${selectedDonationAmount} USD!\n\n${rewardMessage}\n\nLas sombras te bendicen, noble guerrero.`);
+        alert(`🙏 ¡Gracias por tu donación de $${selectedDonationAmount} USD!\n\n${rewardMessage}\n\nTu apoyo hace posible El Silencio De Los Dioses.`);
         
-        // Limpiar formulario
         resetDonationForm();
-        
-        // Cerrar modal después de un breve delay
-        setTimeout(() => {
-            closeModal('donationModal');
-        }, 1000);
+        setTimeout(() => closeModal('donationModal'), 1000);
         
     } catch (error) {
         alert('❌ Error al procesar la donación. Por favor, verifica el enlace.');
@@ -282,7 +370,7 @@ function startAdminTimeout() {
     clearTimeout(adminTimeout);
     adminTimeout = setTimeout(() => {
         closeAdmin();
-    }, 30000); // 30 segundos
+    }, 30000);
 }
 
 function updateAdminStats() {
@@ -315,9 +403,11 @@ function exportEmails() {
     }
     
     const data = {
-        game: 'Shadow Realms',
+        game: 'El Silencio De Los Dioses',
+        studio: 'Esquivel Studio',
         exportDate: new Date().toISOString(),
         totalEmails: registeredEmails.length,
+        firebaseConnected: isFirebaseConnected,
         emails: registeredEmails
     };
     
@@ -325,7 +415,7 @@ function exportEmails() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `shadow_realms_emails_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `el_silencio_emails_${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -334,7 +424,17 @@ function exportEmails() {
     console.log(`📥 ${registeredEmails.length} emails exportados exitosamente`);
 }
 
-function clearAllEmails() {
+function syncEmails() {
+    if (!isFirebaseConnected) {
+        alert('🚫 Firebase no está conectado. No se puede sincronizar.');
+        return;
+    }
+    
+    alert('🔄 Sincronizando con Firebase...');
+    loadEmailsFromFirebase();
+}
+
+async function clearAllEmails() {
     if (registeredEmails.length === 0) {
         alert('📧 No hay emails para eliminar.');
         return;
@@ -342,14 +442,27 @@ function clearAllEmails() {
     
     const confirmation = confirm(`⚠️ ¿Estás seguro de que quieres eliminar todos los ${registeredEmails.length} emails registrados?\n\nEsta acción no se puede deshacer.`);
     
-    if (confirmation) {
+    if (!confirmation) return;
+    
+    try {
+        if (isFirebaseConnected) {
+            // Eliminar de Firebase
+            await database.ref('emails').remove();
+            console.log('🔥 Emails eliminados de Firebase');
+        }
+        
+        // Eliminar localmente
+        localStorage.removeItem('elSilencioEmails');
         registeredEmails = [];
-        localStorage.removeItem('shadowRealmsEmails');
+        
         updateAdminStats();
         updateEmailList();
         
         alert('🗑️ Todos los emails han sido eliminados.');
-        console.log('🗑️ Base de datos de emails limpiada');
+        
+    } catch (error) {
+        console.error('Error eliminando emails:', error);
+        alert('❌ Error al eliminar emails. Inténtalo de nuevo.');
     }
 }
 
@@ -395,7 +508,7 @@ function initializeFloatingAnimations() {
 function initializeScrollEffects() {
     window.addEventListener('scroll', function() {
         const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-        const hue = scrollPercent * 60; // De rojo a púrpura
+        const hue = scrollPercent * 60;
         
         document.body.style.background = `linear-gradient(135deg, 
             hsl(${hue}, 50%, 5%) 0%, 
@@ -409,29 +522,28 @@ function initializeScrollEffects() {
 // ===== FUNCIONES DE INTERACCIÓN =====
 function playTrailer() {
     const trailerMessages = [
-        '🎬 Trailer próximamente disponible!',
-        '🔥 Las sombras aún están renderizando...',
-        '⚔️ El trailer épico llegará pronto!',
-        '🎥 Los desarrolladores están puliendo cada detalle...'
+        'Trailer próximamente disponible!',
+        'El equipo está puliendo cada detalle...',
+        'El trailer épico llegará pronto!',
+        'Los desarrolladores están trabajando en ello...'
     ];
     
     const randomMessage = trailerMessages[Math.floor(Math.random() * trailerMessages.length)];
     
-    // Crear modal personalizado para el trailer
     const trailerModal = document.createElement('div');
     trailerModal.className = 'modal active';
     trailerModal.innerHTML = `
         <div class="modal-content" style="max-width: 500px; text-align: center;">
             <div class="modal-header">
-                <h2 class="modal-title">🎬 Trailer</h2>
+                <h2 class="modal-title">Trailer</h2>
                 <button class="modal-close" onclick="closeTrailerModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="font-size: 4rem; margin: 2rem 0;">🎭</div>
                 <p style="font-size: 1.2rem; margin-bottom: 2rem;">${randomMessage}</p>
-                <p>Mientras tanto, únete a nuestra orden para ser el primero en verlo cuando esté listo.</p>
+                <p>Mientras tanto, únete al sorteo para ser el primero en verlo cuando esté listo.</p>
                 <button class="email-submit" onclick="scrollToSection('hero'); closeTrailerModal();" style="margin-top: 1rem;">
-                    Unirse a la Orden
+                    Unirse al Sorteo
                 </button>
             </div>
         </div>
@@ -440,7 +552,6 @@ function playTrailer() {
     document.body.appendChild(trailerModal);
     document.body.style.overflow = 'hidden';
     
-    // Función para cerrar el modal del trailer
     window.closeTrailerModal = function() {
         document.body.removeChild(trailerModal);
         document.body.style.overflow = 'auto';
@@ -449,23 +560,24 @@ function playTrailer() {
 }
 
 function showPrivacyInfo() {
-    alert(`🛡️ POLÍTICA DE PRIVACIDAD - SHADOW REALMS
+    alert(`POLÍTICA DE PRIVACIDAD - EL SILENCIO DE LOS DIOSES
 
-📧 Información que recopilamos:
+Información que recopilamos:
 • Solo tu email para comunicaciones del juego
+• Fecha y hora de registro
 • No recopilamos información personal adicional
 
-🔒 Cómo protegemos tus datos:
-• Los emails se almacenan localmente en tu dispositivo
+Cómo protegemos tus datos:
+• Almacenamiento seguro en Firebase (Google)
 • No compartimos información con terceros
 • Solo usamos los emails para noticias y sorteos
 
-📮 Comunicaciones:
+Comunicaciones:
 • Noticias de desarrollo
-• Sorteos de armas exclusivas
+• Sorteos de contenido exclusivo
 • Acceso anticipado a betas
 
-❌ Puedes darte de baja en cualquier momento contactando: nightmare.studios.dev@gmail.com`);
+Puedes darte de baja en cualquier momento contactando al equipo a través de Discord.`);
 }
 
 // ===== ATAJOS DE TECLADO =====
@@ -474,14 +586,12 @@ function setupKeyboardShortcuts() {
 }
 
 function handleKeyboardShortcuts(event) {
-    // Panel de administrador: Ctrl+Shift+A
-    if (event.ctrlKey && event.shiftKey && event.code === 'KeyA') {
+    if (event.ctrlKey && event.altKey && event.code === 'KeyA') {
         event.preventDefault();
         showAdminPanel();
         return;
     }
     
-    // Konami Code para contenido secreto
     handleKonamiCode(event);
 }
 
@@ -498,39 +608,37 @@ function handleKonamiCode(event) {
     
     if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
         unlockSecretContent();
-        konamiCode = []; // Reset
+        konamiCode = [];
     }
 }
 
 function unlockSecretContent() {
-    // Efectos visuales especiales
     document.body.style.filter = 'hue-rotate(180deg) saturate(1.5)';
     document.body.style.transition = 'filter 2s ease';
     
-    // Mensaje especial
     const secretModal = document.createElement('div');
     secretModal.className = 'modal active';
     secretModal.innerHTML = `
         <div class="modal-content" style="max-width: 600px; text-align: center;">
             <div class="modal-header">
-                <h2 class="modal-title">🗡️ CONTENIDO SECRETO DESBLOQUEADO</h2>
+                <h2 class="modal-title">CONTENIDO SECRETO DESBLOQUEADO</h2>
                 <button class="modal-close" onclick="closeSecretModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="font-size: 5rem; margin: 1rem 0;">⚔️</div>
-                <h3 style="color: #ff6b6b; margin-bottom: 1rem;">¡La "Espada de las Mil Sombras" te ha sido otorgada!</h3>
+                <h3 style="color: #ff6b6b; margin-bottom: 1rem;">¡El "Báculo de los Dioses Silenciosos" te ha sido otorgado!</h3>
                 <p style="font-size: 1.1rem; margin-bottom: 1rem;">
-                    Has demostrado ser un verdadero Shadow Walker al descubrir los secretos ocultos.
+                    Has demostrado ser un verdadero conocedor de los secretos ocultos.
                 </p>
                 <div style="background: rgba(139, 0, 0, 0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-                    <strong>🎁 Recompensa Secreta:</strong><br>
+                    <strong>Recompensa Secreta:</strong><br>
                     • Arma legendaria exclusiva<br>
-                    • Título especial: "Maestro de las Sombras"<br>
-                    • Skin única: "Guerrero del Código"<br>
+                    • Título especial: "Guardián de los Códigos"<br>
+                    • Skin única: "Invocador Ancestral"<br>
                     • Acceso VIP a contenido especial
                 </div>
                 <p style="font-style: italic; color: #888;">
-                    "Solo aquellos que dominan los antiguos códigos pueden despertar el verdadero poder."
+                    "Solo aquellos que escuchan el silencio pueden despertar a los dioses."
                 </p>
             </div>
         </div>
@@ -538,7 +646,6 @@ function unlockSecretContent() {
     
     document.body.appendChild(secretModal);
     
-    // Función para cerrar el modal secreto
     window.closeSecretModal = function() {
         document.body.removeChild(secretModal);
         document.body.style.filter = 'none';
@@ -546,46 +653,46 @@ function unlockSecretContent() {
         delete window.closeSecretModal;
     };
     
-    // Auto-cerrar después de 10 segundos
     setTimeout(() => {
         if (document.body.contains(secretModal)) {
             window.closeSecretModal();
         }
     }, 10000);
     
-    console.log('🎉 ¡Contenido secreto desbloqueado! Konami Code detectado.');
+    console.log('Contenido secreto desbloqueado! Konami Code detectado.');
 }
 
 // ===== FUNCIONES DE UTILIDAD =====
 function logWelcomeMessage() {
     console.log(`
-    🗡️ SHADOW REALMS - DEVELOPER CONSOLE 🗡️
+    EL SILENCIO DE LOS DIOSES - DEVELOPER CONSOLE
     
     ═══════════════════════════════════════════
     
-    🎮 Comandos secretos disponibles:
+    Comandos secretos disponibles:
     • Ctrl+Shift+A: Panel de administrador
     • Código Konami: ↑↑↓↓←→←→BA (Contenido secreto)
     • Scroll: Efectos dinámicos de fondo
     
-    📧 Sistema de emails: ${registeredEmails.length} registrados
+    Sistema de emails: ${registeredEmails.length} registrados
+    Firebase: ${isFirebaseConnected ? 'Conectado' : 'Desconectado'}
     
-    🔧 ¿Interesado en unirte al desarrollo?
-    📮 nightmare.studios.dev@gmail.com
+    ¿Interesado en unirte al desarrollo?
+    Visita nuestro Discord (enlace en la página)
     
-    💀 "En las sombras encontramos la verdadera luz"
+    "En el silencio encontramos las respuestas"
     
     ═══════════════════════════════════════════
     `);
 }
 
-// ===== MANEJO DE ERRORES GLOBALES =====
+// ===== MANEJO DE ERRORES =====
 window.addEventListener('error', function(event) {
-    console.error('🚫 Error en Shadow Realms:', event.error);
+    console.error('Error en El Silencio De Los Dioses:', event.error);
 });
 
 window.addEventListener('unhandledrejection', function(event) {
-    console.error('🚫 Promise rechazada:', event.reason);
+    console.error('Promise rechazada:', event.reason);
 });
 
 // ===== FUNCIONES DE RENDIMIENTO =====
@@ -601,14 +708,18 @@ function debounce(func, wait) {
     };
 }
 
-// Optimizar el scroll
 const optimizedScrollHandler = debounce(() => {
     initializeScrollEffects();
-}, 16); // ~60fps
+}, 16);
 
 window.addEventListener('scroll', optimizedScrollHandler);
 
-// ===== DETECCIÓN DE DISPOSITIVO =====
+// ===== FUNCIONES AUXILIARES =====
+function loadEmails() {
+    // Esta función ahora se maneja en initializeApp()
+    // Mantenida para compatibilidad
+}
+
 function isMobile() {
     return window.innerWidth <= 768;
 }
@@ -617,7 +728,12 @@ function isTouch() {
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
-// ===== ANIMACIONES ADICIONALES =====
+// ===== INICIALIZACIÓN ADICIONAL =====
+window.addEventListener('load', function() {
+    addHoverEffects();
+    document.body.classList.add('loaded');
+});
+
 function addHoverEffects() {
     const interactiveElements = document.querySelectorAll('.nav-item, .social-link, .amount-btn, .email-submit');
     
@@ -634,96 +750,4 @@ function addHoverEffects() {
             }
         });
     });
-}
-
-// ===== INICIALIZACIÓN DE EVENTOS ADICIONALES =====
-window.addEventListener('load', function() {
-    addHoverEffects();
-    
-    // Agregar loading animation
-    document.body.classList.add('loaded');
-    
-    // Precargar imágenes importantes
-    preloadImages();
-});
-
-function preloadImages() {
-    const imagesToPreload = [
-        // Agregar URLs de imágenes importantes aquí cuando las tengas
-    ];
-    
-    imagesToPreload.forEach(src => {
-        const img = new Image();
-        img.src = src;
-    });
-}
-
-// ===== FUNCIONES DE ANALYTICS (PREPARADO PARA FUTURO) =====
-function trackEvent(eventName, data = {}) {
-    // Preparado para integrar Google Analytics o similar
-    console.log(`📊 Event tracked: ${eventName}`, data);
-}
-
-// ===== SISTEMA DE NOTIFICACIONES =====
-function showNotification(message, type = 'info', duration = 3000) {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        background: rgba(0, 0, 0, 0.9);
-        border: 2px solid ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#ff6b6b'};
-        border-radius: 5px;
-        color: white;
-        z-index: 10001;
-        max-width: 300px;
-        backdrop-filter: blur(10px);
-        animation: slideInRight 0.3s ease;
-    `;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, duration);
-}
-
-// ===== SISTEMA DE CACHE SIMPLE =====
-const cache = new Map();
-
-function setCache(key, value, ttl = 300000) { // 5 minutos por defecto
-    const expiry = Date.now() + ttl;
-    cache.set(key, { value, expiry });
-}
-
-function getCache(key) {
-    const item = cache.get(key);
-    if (!item) return null;
-    
-    if (Date.now() > item.expiry) {
-        cache.delete(key);
-        return null;
-    }
-    
-    return item.value;
-}
-
-// ===== EXPORT PARA TESTING (SI ES NECESARIO) =====
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        registerEmail,
-        isValidEmail,
-        selectAmount,
-        processDonation,
-        showAdminPanel,
-        exportEmails
-    };
 }
