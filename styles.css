@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: 'Metal Mania', ;
+    font-family: 'Metal Mania', cursive;
     background: linear-gradient(135deg, #0a0a0a 0%, #1a0e1a 25%, #2d1b2d 50%, #1a0e1a 75%, #0a0a0a 100%);
     color: #e8e8e8;
     overflow-x: hidden;
@@ -977,7 +977,7 @@ body {
 @media (max-width: 768px) {
     
     body {
-        font-family: 'Arial', sans-serif !important;
+        font-family: 'Metal Mania', sans-serif !important;
     }
     
     .desktop-nav {
@@ -993,7 +993,7 @@ body {
     .game-title,
     .section-title,
     .modal-title {
-        font-family: 'Arial', sans-serif !important;
+        font-family: 'Cinzel', serif !important;
         font-weight: bold;
     }
     
