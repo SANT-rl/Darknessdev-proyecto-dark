@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Silencio De Los dioses</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="particle-bg"></div>
+    
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="nav-container">
+                <div class="logo">El Silencio De Los dioses</div>
+                <nav class="desktop-nav">
+                    <ul class="nav-menu">
+                        <li class="nav-item" onclick="scrollToSection('hero')">Inicio</li>
+                        <li class="nav-item" onclick="scrollToSection('lore')">Lore</li>
+                        <li class="nav-item" onclick="openModal('newsModal')">Noticias</li>
+                        <li class="nav-item" onclick="openModal('donationModal')">Donar</li>
+                        <li class="nav-item" onclick="scrollToSection('team')">Únete</li>
+                    </ul>
+                </nav>
+                <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+                <div class="mobile-menu-content">
+                    <div class="mobile-menu-header">
+                        <div class="mobile-logo">El Silencio De Los dioses</div>
+                        <button class="mobile-close" onclick="closeMobileMenu()">&times;</button>
+                    </div>
+                    <ul class="mobile-nav-menu">
+                        <li class="mobile-nav-item" onclick="scrollToSection('hero'); closeMobileMenu()">🏠 Inicio</li>
+                        <li class="mobile-nav-item" onclick="scrollToSection('lore'); closeMobileMenu()">📜 Lore</li>
+                        <li class="mobile-nav-item" onclick="openModal('newsModal'); closeMobileMenu()">📰 Noticias</li>
+                        <li class="mobile-nav-item" onclick="openModal('donationModal'); closeMobileMenu()">💰 Donar</li>
+                        <li class="mobile-nav-item" onclick="scrollToSection('team'); closeMobileMenu()">👥 Únete</li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <div class="studio-name">ESQUIVEL STUDIO presenta</div>
+                <h1 class="game-title floating">El Silencio De Los dioses</h1>
+                <div class="studio-name">ESQUIVEL STUDIO BY DARKNESSDEV</div>
+                
+                <div class="trailer-container">
+                    <div class="trailer-placeholder" onclick="playTrailer()">
+                        <div class="play-button">▶</div>
+                        <div class="trailer-text">Ver Trailer</div>
+                    </div>
+                </div>
+                
+                <a href="#" class="coming-soon">Próximamente en Play Store</a>
+            </div>
+        </section>
+
+        <!-- Lore Section -->
+        <section id="lore" class="section">
+            <h2 class="section-title">Lore del juego</h2>
+            <div class="lore-text">
+                En un mundo donde la luz se desvanece y las sombras cobran vida, los antiguos sellos que mantenían a raya las fuerzas oscuras han comenzado a debilitarse. 
+                Los Shadow Walkers, guerreros nacidos de la unión entre luz y oscuridad, son la última esperanza de los reinos mortales.
+                <br><br>
+                Sumérgete en un universo donde cada decisión tiene consecuencias, donde la magia corrupta puede ser tanto tu salvación como tu perdición. 
+                Los secretos ancestrales aguardan en las profundidades de mazmorras olvidadas, y solo los más valientes podrán descubrir la verdad 
+                que se oculta tras el velo de las sombras eternas.
+            </div>
+        </section>
+
+        <!-- Email Registration -->
+        <section class="section">
+            <div class="email-section">
+                <h2 class="section-title">Únete para que participes en grandes sorteos</h2>
+                <p>Regístrate para recibir actualizaciones exclusivas y participar en sorteos de armas legendarias</p>
+                <form class="email-form" onsubmit="registerEmail(event)">
+                    <input type="email" class="email-input" placeholder="Tu email (correo electronico)" required>
+                    <button type="submit" class="email-submit">Unirse al sorteo</button>
+                </form>
+                <div id="emailMessage" class="email-message"></div>
+            </div>
+        </section>
+
+        <!-- Social Media -->
+        <section class="section">
+            <div class="social-section">
+                <h2 class="section-title">Síguenos para que estes actualizado de los avances</h2>
+                <div class="social-grid">
+            
+                    <a href="#" class="social-link" title="TikTok">TikTok</a>
+                    <a href="#" class="social-link" title="YouTube">YouTube</a>
+                    <a href="#" class="social-link" title="Discord">Discord</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="section">
+            <h2 class="section-title">Únete a Esquivel Studios</h2>
+            <div class="lore-text">
+                ¿Eres un programador o un diseñador? Únete a nuestro equipo y ayuda a crear 
+                la experiencia dark fantasy definitiva. Buscamos personas creativas para dar vida a nuestro gran Proyecto.
+                <br><br>
+                <strong>Posiciones disponibles:</strong><br>
+                • Desarrollador godot<br>
+                • Artista 2D/3D<br>
+                • Diseñador de UI/UX<br>
+                • Compositor de música dark-fantasy<br>
+                <br>
+                Envía tu portafolio a: <strong style="color: #ff6b6b;">Nuestro servidor de discord (link arriba)</strong>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <span class="footer-link" onclick="openModal('newsModal')">Noticias de Desarrollo</span>
+                <span class="footer-link" onclick="openModal('donationModal')">Apoyar el Proyecto</span>
+                <span class="footer-link" onclick="scrollToSection('team')">Trabaja con Nosotros</span>
+                <span class="footer-link" onclick="showPrivacyInfo()">Privacidad</span>
+            </div>
+            <p>&copy; 2025 Nightmare Studios. Todos los derechos reservados Darknessdev y programador secreto.</p>
+        </footer>
+    </div>
+
+    <!-- News Modal -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content news-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Noticias del Desarrollo</h2>
+                <button class="modal-close" onclick="closeModal('newsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <article class="news-article">
+                    <h3 class="news-title">Sistema de Combate Renovado</h3>
+                    <div class="news-date">15 de Septiembre, 2025</div>
+                    <p>Hemos implementado un nuevo sistema de combate que combina elementos tácticos con la brutalidad característica del género dark fantasy. Los jugadores podrán encadenar combos devastadores usando tanto armas físicas como hechizos sombríos.</p>
+                </article>
+                
+                <article class="news-article">
+                    <h3 class="news-title">Primera Beta Cerrada</h3>
+                    <div class="news-date">10 de Septiembre, 2025</div>
+                    <p>La primera beta será lanzada el próximo mes para los donadores.</p>
+                </article>
+                
+                <article class="news-article">
+                    <h3 class="news-title">Diseño de Criaturas</h3>
+                    <div class="news-date">5 de Septiembre, 2025</div>
+                    <p>Nuestro equipo de arte ha completado los diseños de las primeras 50 criaturas sombríos que habitarán los reinos corrompidos. Cada una con habilidades únicas y lore profundo.</p>
+                </article>
+
+                <article class="news-article">
+                    <h3 class="news-title">Banda Sonora </h3>
+                    <div class="news-date">1 de Septiembre, 2025</div>
+                    <p>Colaboramos con compositores especializados en música dark fantasy para crear una banda sonora que te sumergirá completamente en el mundo oscuro. Cada zona tendrá su propia atmósfera musical única.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Modal -->
+    <div id="donationModal" class="modal">
+        <div class="modal-content donation-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Apoya el Proyecto</h2>
+                <button class="modal-close" onclick="closeModal('donationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="donation-description">Tu apoyo nos ayuda a crear un juego unico e increible</p>
+                
+                <div class="donation-amount">
+                    <button class="amount-btn" onclick="selectAmount(this, 5)">$5 USD</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 10)">$10 USD</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 25)">$25 USD</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 50)">$50 USD</button>
+                </div>
+                
+                <div class="donation-input-group">
+                    <label for="donationLink">Link de Donación:</label>
+                    <input type="url" class="donation-link" placeholder="PayPal, Nequi, Patreon, etc." id="donationLink">
+                </div>
+                
+                <button class="email-submit donation-btn" onclick="processDonation()">Realizar Donación</button>
+                
+                <div class="rewards-section">
+                    <h3>🎁 Recompensas por Donación:</h3>
+                    <div class="reward-tier">
+                        <span class="reward-amount">$5+</span>
+                        <span class="reward-description">Acceso Beta Temprano</span>
+                    </div>
+                    <div class="reward-tier">
+                        <span class="reward-amount">$10+</span>
+                        <span class="reward-description">Skin Exclusiva "Sombra Dorada"</span>
+                    </div>
+                    <div class="reward-tier">
+                        <span class="reward-amount">$25+</span>
+                        <span class="reward-description">Arma Legendaria "Nightmare Blade"</span>
+                    </div>
+                    <div class="reward-tier">
+                        <span class="reward-amount">$50+</span>
+                        <span class="reward-description">Créditos + Mascota Única "Shadow Wolf"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel (Hidden) -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <h3>🔒 Panel de Administrador</h3>
+            <button class="admin-close" onclick="closeAdmin()">&times;</button>
+        </div>
+        <div class="admin-body">
+            <div class="admin-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Emails Registrados:</span>
+                    <span class="stat-value" id="emailCount">0</span>
+                </div>
+            </div>
+            <div id="emailList" class="email-list">
+                <!-- Los emails aparecerán aquí -->
+            </div>
+            <div class="admin-actions">
+                <button class="admin-btn" onclick="exportEmails()">📥 Exportar Emails</button>
+                <button class="admin-btn danger" onclick="clearAllEmails()">🗑️ Limpiar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
