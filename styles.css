@@ -8,11 +8,16 @@
 
 body {
     font-family: 'Metal Mania', cursive;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a0e1a 25%, #2d1b2d 50%, #1a0e1a 75%, #0a0a0a 100%);
+    background: #000 !important; /* Fondo completamente negro */
     color: #e8e8e8;
     overflow-x: hidden;
     min-height: 100vh;
     line-height: 1.6;
+}
+
+.particle-bg,
+body::before {
+    background: none !important; /* Elimina gradientes y niebla */
 }
 
 /* ===== BACKGROUND EFFECTS ===== */
@@ -23,8 +28,8 @@ body {
     width: 100%;
     height: 100%;
     z-index: -2;
-    background: radial-gradient(circle at 20% 80%, rgba(120, 20, 20, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(80, 20, 120, 0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 80%, rgba(64, 64, 64, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(96, 96, 96, 0.08) 0%, transparent 50%);
 }
 
 .main-container {
@@ -34,15 +39,15 @@ body {
 
 /* ===== HEADER ===== */
 .header {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
     padding: 1rem 0;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    border-bottom: 2px solid #8b0000;
-    box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+    border-bottom: 2px solid #2a2a2a;
+    box-shadow: 0 5px 20px rgba(128, 128, 128, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -56,17 +61,17 @@ body {
 }
 
 .logo {
-    font-family: 'Cinzel', serif;  /* ← CAMBIAR ESTA LÍNEA */
+    font-family: 'Cinzel', serif;
     font-size: 2rem;
-    color: #ff6b6b;
-    text-shadow: 0 0 20px #8b0000;
+    color: #f5f5f5;
+    text-shadow: 0 0 20px #808080;
     animation: glow 2s ease-in-out infinite alternate;
     cursor: pointer;
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 20px #8b0000, 0 0 30px #8b0000; }
-    to { text-shadow: 0 0 25px #ff6b6b, 0 0 35px #8b0000; }
+    from { text-shadow: 0 0 20px #696969, 0 0 30px #a9a9a9; }
+    to { text-shadow: 0 0 25px #808080, 0 0 35px #555555; }
 }
 
 .nav-menu {
@@ -82,30 +87,33 @@ body {
     transition: all 0.3s ease;
     border-radius: 5px;
     font-weight: 500;
+    color: #d3d3d3;
 }
 
 .nav-item:hover {
-    border-color: #8b0000;
-    background: rgba(139, 0, 0, 0.2);
+    border-color: #555555;
+    background: rgba(85, 85, 85, 0.2);
     transform: translateY(-2px);
-    color: #ff6b6b;
+    color: #f0f0f0;
 }
 
-/* ===== MOBILE MENU ===== */
+/* ===== MOBILE MENU MEJORADO ===== */
 .hamburger {
     display: none;
     cursor: pointer;
     font-size: 1.5rem;
-    color: #ff6b6b;
+    color: #c0c0c0;
     padding: 0.5rem;
     border: 1px solid transparent;
     border-radius: 5px;
     transition: all 0.3s ease;
+    z-index: 2001;
+    position: relative;
 }
 
 .hamburger:hover {
-    border-color: #8b0000;
-    background: rgba(139, 0, 0, 0.2);
+    border-color: #696969;
+    background: rgba(105, 105, 105, 0.2);
 }
 
 .mobile-menu {
@@ -114,7 +122,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     z-index: 2000;
 }
 
@@ -128,21 +136,22 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .mobile-menu-content {
     position: absolute;
     top: 0;
     right: 0;
-    width: 80%;
+    width: 85%;
     max-width: 350px;
-    height: 100%;
-    background: linear-gradient(135deg, #1a1a1a, #2d1b2d);
-    border-left: 2px solid #8b0000;
-    box-shadow: -10px 0 30px rgba(139, 0, 0, 0.5);
+    height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #0d0d0d);
+    border-left: 3px solid #555555;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
     animation: slideIn 0.3s ease;
+    overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -155,20 +164,25 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(85, 85, 85, 0.4);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .mobile-logo {
-    font-family: 'Nosifer', cursive;
-    color: #ff6b6b;
+    font-family: 'Cinzel', serif;
+    color: #c0c0c0;
     font-size: 1.5rem;
-    text-shadow: 0 0 15px #8b0000;
+    text-shadow: 0 0 15px #696969;
 }
 
 .mobile-close {
     background: none;
     border: none;
-    color: #ff6b6b;
+    color: #c0c0c0;
     font-size: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -181,28 +195,35 @@ body {
 }
 
 .mobile-close:hover {
-    background: rgba(139, 0, 0, 0.3);
+    background: rgba(85, 85, 85, 0.3);
     transform: rotate(90deg);
+    color: #fff;
 }
 
 .mobile-nav-menu {
     list-style: none;
-    padding: 2rem 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
 }
 
 .mobile-nav-item {
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
     border-left: 3px solid transparent;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: #d3d3d3;
+    border-bottom: 1px solid rgba(85, 85, 85, 0.2);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .mobile-nav-item:hover {
-    background: rgba(139, 0, 0, 0.2);
-    border-left-color: #ff6b6b;
-    color: #ff6b6b;
-    transform: translateX(10px);
+    background: rgba(85, 85, 85, 0.3);
+    border-left-color: #a0a0a0;
+    color: #ffffff;
+    transform: translateX(15px);
+    box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.1);
 }
 
 /* ===== HERO SECTION ===== */
@@ -213,7 +234,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="%23000"/><g opacity="0.1"><circle cx="960" cy="540" r="300" fill="none" stroke="%23ff6b6b" stroke-width="2"/><circle cx="960" cy="540" r="200" fill="none" stroke="%23ff6b6b" stroke-width="1"/><circle cx="960" cy="540" r="100" fill="none" stroke="%23ff6b6b" stroke-width="1"/></g></svg>') center/cover no-repeat;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="%23000"/><g opacity="0.1"><circle cx="960" cy="540" r="300" fill="none" stroke="%23808080" stroke-width="2"/><circle cx="960" cy="540" r="200" fill="none" stroke="%23808080" stroke-width="1"/><circle cx="960" cy="540" r="100" fill="none" stroke="%23808080" stroke-width="1"/></g></svg>') center/cover no-repeat;
     position: relative;
     margin-top: 80px;
 }
@@ -234,15 +255,16 @@ body {
 }
 
 .game-title {
-    font-family: 'Cinzel', serif;  /* ← CAMBIAR ESTA LÍNEA */
+    font-family: 'Cinzel', serif;
     font-size: clamp(3rem, 8vw, 6rem);
     margin-bottom: 1rem;
-    background: linear-gradient(45deg, #ff6b6b, #8b0000, #ff6b6b);
+    background: linear-gradient(45deg, #c0c0c0, #696969, #a9a9a9);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradientShift 3s ease infinite;
+    filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.3));
 }
 
 @keyframes gradientShift {
@@ -252,7 +274,7 @@ body {
 
 .studio-name {
     font-size: 1.2rem;
-    color: #cccccc;
+    color: #b0b0b0;
     margin-bottom: 2rem;
     opacity: 0.8;
 }
@@ -266,8 +288,8 @@ body {
     width: 600px;
     max-width: 90vw;
     height: 337px;
-    background: linear-gradient(45deg, #1a1a1a, #2d1b2d);
-    border: 2px solid #8b0000;
+    background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    border: 2px solid #555555;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -286,7 +308,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(192, 192, 192, 0.1), transparent);
     transition: all 0.5s ease;
 }
 
@@ -296,25 +318,25 @@ body {
 
 .trailer-placeholder:hover {
     transform: scale(1.02);
-    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
-    border-color: #ff6b6b;
+    box-shadow: 0 10px 30px rgba(128, 128, 128, 0.3);
+    border-color: #808080;
 }
 
 .play-button {
     font-size: 4rem;
-    color: #ff6b6b;
-    text-shadow: 0 0 20px #8b0000;
+    color: #c0c0c0;
+    text-shadow: 0 0 20px #696969;
     margin-bottom: 0.5rem;
 }
 
 .trailer-text {
-    color: #cccccc;
+    color: #b0b0b0;
     font-size: 1.1rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .coming-soon {
-    background: linear-gradient(45deg, #8b0000, #ff6b6b);
+    background: linear-gradient(45deg, #555555, #808080);
     color: white;
     padding: 1rem 2rem;
     border-radius: 50px;
@@ -328,6 +350,7 @@ body {
     position: relative;
     overflow: hidden;
     font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .coming-soon::before {
@@ -347,7 +370,7 @@ body {
 
 .coming-soon:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(139, 0, 0, 0.5);
+    box-shadow: 0 10px 25px rgba(128, 128, 128, 0.4);
 }
 
 /* ===== SECTIONS ===== */
@@ -358,11 +381,11 @@ body {
 }
 
 .section-title {
-    font-family: 'Cinzel', serif;  /* ← CAMBIAR ESTA LÍNEA */
+    font-family: 'Cinzel', serif;
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 3rem;
-    color: #ff6b6b;
+    color: #c0c0c0;
     position: relative;
 }
 
@@ -374,7 +397,7 @@ body {
     transform: translateX(-50%);
     width: 100px;
     height: 3px;
-    background: linear-gradient(45deg, #8b0000, #ff6b6b, #8b0000);
+    background: linear-gradient(45deg, #555555, #808080, #555555);
 }
 
 /* ===== LORE SECTION ===== */
@@ -384,23 +407,23 @@ body {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
-    color: #cccccc;
+    color: #b0b0b0;
     font-style: italic;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     padding: 2rem;
     border-radius: 15px;
-    border: 1px solid rgba(139, 0, 0, 0.3);
+    border: 1px solid rgba(85, 85, 85, 0.3);
     backdrop-filter: blur(5px);
 }
 
 /* ===== EMAIL SECTION ===== */
 .email-section {
-    background: rgba(139, 0, 0, 0.1);
+    background: rgba(26, 26, 26, 0.3);
     padding: 3rem 2rem;
     border-radius: 15px;
     text-align: center;
     margin: 2rem 0;
-    border: 1px solid rgba(139, 0, 0, 0.3);
+    border: 1px solid rgba(85, 85, 85, 0.3);
     backdrop-filter: blur(5px);
 }
 
@@ -417,8 +440,8 @@ body {
     flex: 1;
     min-width: 250px;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #8b0000;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #555555;
     border-radius: 5px;
     color: white;
     font-size: 1rem;
@@ -427,8 +450,8 @@ body {
 
 .email-input:focus {
     outline: none;
-    border-color: #ff6b6b;
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+    border-color: #808080;
+    box-shadow: 0 0 15px rgba(128, 128, 128, 0.3);
 }
 
 .email-input::placeholder {
@@ -437,7 +460,7 @@ body {
 
 .email-submit {
     padding: 1rem 2rem;
-    background: linear-gradient(45deg, #8b0000, #ff6b6b);
+    background: linear-gradient(45deg, #555555, #808080);
     border: none;
     border-radius: 5px;
     color: white;
@@ -449,7 +472,7 @@ body {
 
 .email-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(128, 128, 128, 0.4);
 }
 
 .email-message {
@@ -492,13 +515,13 @@ body {
 .social-link {
     width: 80px;
     height: 80px;
-    background: rgba(139, 0, 0, 0.2);
-    border: 2px solid #8b0000;
+    background: rgba(26, 26, 26, 0.5);
+    border: 2px solid #555555;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ff6b6b;
+    color: #c0c0c0;
     text-decoration: none;
     font-size: 2rem;
     transition: all 0.3s ease;
@@ -513,7 +536,7 @@ body {
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(255, 107, 107, 0.1);
+    background: rgba(128, 128, 128, 0.1);
     border-radius: 50%;
     transition: all 0.3s ease;
     transform: translate(-50%, -50%);
@@ -525,19 +548,19 @@ body {
 }
 
 .social-link:hover {
-    background: rgba(255, 107, 107, 0.2);
+    background: rgba(85, 85, 85, 0.3);
     transform: translateY(-5px) rotate(360deg);
-    box-shadow: 0 10px 25px rgba(139, 0, 0, 0.5);
-    border-color: #ff6b6b;
+    box-shadow: 0 10px 25px rgba(128, 128, 128, 0.3);
+    border-color: #808080;
 }
 
 /* ===== FOOTER ===== */
 .footer {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     padding: 2rem;
     text-align: center;
     margin-top: 4rem;
-    border-top: 2px solid #8b0000;
+    border-top: 2px solid #555555;
     backdrop-filter: blur(10px);
 }
 
@@ -550,7 +573,7 @@ body {
 }
 
 .footer-link {
-    color: #cccccc;
+    color: #b0b0b0;
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -560,9 +583,9 @@ body {
 }
 
 .footer-link:hover {
-    color: #ff6b6b;
-    border-color: #8b0000;
-    background: rgba(139, 0, 0, 0.1);
+    color: #e0e0e0;
+    border-color: #555555;
+    background: rgba(85, 85, 85, 0.1);
     transform: translateY(-2px);
 }
 
@@ -574,9 +597,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     z-index: 10000;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
     animation: fadeIn 0.3s ease;
 }
 
@@ -592,13 +615,13 @@ body {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #1a1a1a, #2d1b2d);
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
     border-radius: 15px;
-    border: 2px solid #8b0000;
+    border: 2px solid #555555;
     max-width: 90vw;
     max-height: 90vh;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(139, 0, 0, 0.5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     animation: slideUp 0.3s ease;
 }
 
@@ -618,13 +641,13 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
-    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(85, 85, 85, 0.3);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-title {
-    font-family: 'Butcherman', cursive;
-    color: #ff6b6b;
+    font-family: 'Cinzel', serif;
+    color: #c0c0c0;
     font-size: 2rem;
     margin: 0;
 }
@@ -632,7 +655,7 @@ body {
 .modal-close {
     background: none;
     border: none;
-    color: #ff6b6b;
+    color: #c0c0c0;
     font-size: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -647,7 +670,7 @@ body {
 .modal-close:hover {
     color: #fff;
     transform: rotate(90deg);
-    background: rgba(139, 0, 0, 0.3);
+    background: rgba(85, 85, 85, 0.3);
 }
 
 .modal-body {
@@ -663,25 +686,25 @@ body {
 }
 
 .news-article {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     padding: 2rem;
     margin: 2rem 0;
     border-radius: 10px;
-    border: 1px solid rgba(139, 0, 0, 0.3);
+    border: 1px solid rgba(85, 85, 85, 0.3);
     transition: all 0.3s ease;
 }
 
 .news-article:hover {
-    border-color: #8b0000;
+    border-color: #555555;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(128, 128, 128, 0.2);
 }
 
 .news-title {
-    color: #ff6b6b;
+    color: #c0c0c0;
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    font-family: 'Butcherman', cursive;
+    font-family: 'Cinzel', serif;
 }
 
 .news-date {
@@ -700,7 +723,7 @@ body {
 
 .donation-description {
     font-size: 1.1rem;
-    color: #cccccc;
+    color: #b0b0b0;
     margin-bottom: 2rem;
 }
 
@@ -714,8 +737,8 @@ body {
 
 .amount-btn {
     padding: 1rem 1.5rem;
-    background: rgba(139, 0, 0, 0.3);
-    border: 2px solid #8b0000;
+    background: rgba(26, 26, 26, 0.5);
+    border: 2px solid #555555;
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -726,10 +749,10 @@ body {
 }
 
 .amount-btn:hover, .amount-btn.active {
-    background: rgba(255, 107, 107, 0.3);
+    background: rgba(85, 85, 85, 0.3);
     transform: translateY(-2px);
-    border-color: #ff6b6b;
-    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+    border-color: #808080;
+    box-shadow: 0 5px 15px rgba(128, 128, 128, 0.2);
 }
 
 .donation-input-group {
@@ -740,15 +763,15 @@ body {
 .donation-input-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #ff6b6b;
+    color: #c0c0c0;
     font-weight: bold;
 }
 
 .donation-link {
     width: 100%;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #8b0000;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #555555;
     border-radius: 5px;
     color: white;
     font-size: 1rem;
@@ -757,8 +780,8 @@ body {
 
 .donation-link:focus {
     outline: none;
-    border-color: #ff6b6b;
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+    border-color: #808080;
+    box-shadow: 0 0 15px rgba(128, 128, 128, 0.3);
 }
 
 .donation-btn {
@@ -768,15 +791,15 @@ body {
 }
 
 .rewards-section {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     padding: 2rem;
     border-radius: 10px;
-    border: 1px solid rgba(139, 0, 0, 0.3);
+    border: 1px solid rgba(85, 85, 85, 0.3);
     margin-top: 2rem;
 }
 
 .rewards-section h3 {
-    color: #ff6b6b;
+    color: #c0c0c0;
     margin-bottom: 1rem;
     text-align: center;
 }
@@ -786,7 +809,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(139, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(85, 85, 85, 0.2);
 }
 
 .reward-tier:last-child {
@@ -794,14 +817,14 @@ body {
 }
 
 .reward-amount {
-    color: #ff6b6b;
+    color: #c0c0c0;
     font-weight: bold;
     font-size: 1.1rem;
     min-width: 60px;
 }
 
 .reward-description {
-    color: #cccccc;
+    color: #b0b0b0;
     text-align: left;
     flex: 1;
     margin-left: 1rem;
@@ -815,11 +838,11 @@ body {
     right: 20px;
     width: 350px;
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid #8b0000;
+    border: 2px solid #555555;
     border-radius: 10px;
     z-index: 9999;
-    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
 }
 
 .admin-panel.active {
@@ -843,12 +866,12 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
-    background: rgba(139, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(85, 85, 85, 0.3);
+    background: rgba(26, 26, 26, 0.3);
 }
 
 .admin-header h3 {
-    color: #ff6b6b;
+    color: #c0c0c0;
     margin: 0;
     font-size: 1.2rem;
 }
@@ -856,7 +879,7 @@ body {
 .admin-close {
     background: none;
     border: none;
-    color: #ff6b6b;
+    color: #c0c0c0;
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -871,7 +894,7 @@ body {
 .admin-close:hover {
     color: #fff;
     transform: rotate(90deg);
-    background: rgba(139, 0, 0, 0.3);
+    background: rgba(85, 85, 85, 0.3);
 }
 
 .admin-body {
@@ -889,26 +912,26 @@ body {
 }
 
 .stat-label {
-    color: #cccccc;
+    color: #b0b0b0;
 }
 
 .stat-value {
-    color: #ff6b6b;
+    color: #e0e0e0;
     font-weight: bold;
 }
 
 .email-list {
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid rgba(139, 0, 0, 0.3);
+    border: 1px solid rgba(85, 85, 85, 0.3);
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .email-item {
     padding: 0.5rem;
-    border-bottom: 1px solid rgba(139, 0, 0, 0.2);
-    color: #cccccc;
+    border-bottom: 1px solid rgba(85, 85, 85, 0.2);
+    color: #b0b0b0;
     font-size: 0.9rem;
     word-break: break-all;
 }
@@ -926,8 +949,8 @@ body {
 .admin-btn {
     flex: 1;
     padding: 0.75rem;
-    background: rgba(139, 0, 0, 0.3);
-    border: 1px solid #8b0000;
+    background: rgba(26, 26, 26, 0.5);
+    border: 1px solid #555555;
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -936,7 +959,7 @@ body {
 }
 
 .admin-btn:hover {
-    background: rgba(139, 0, 0, 0.5);
+    background: rgba(85, 85, 85, 0.3);
     transform: translateY(-1px);
 }
 
@@ -961,16 +984,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #0a0a0a;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #8b0000, #ff6b6b);
+    background: linear-gradient(45deg, #555555, #808080);
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #ff6b6b, #8b0000);
+    background: linear-gradient(45deg, #808080, #696969);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -999,6 +1022,43 @@ body {
     
     .nav-container {
         padding: 0 1rem;
+    }
+    
+    /* Mejoras específicas para el menú móvil */
+    .mobile-menu-content {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .mobile-menu-header {
+        padding: 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid rgba(85, 85, 85, 0.5);
+    }
+    
+    .mobile-nav-menu {
+        padding: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(15px);
+    }
+    
+    .mobile-nav-item {
+        padding: 1.5rem 2rem;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba(85, 85, 85, 0.2);
+        background: rgba(0, 0, 0, 0.7);
+    }
+    
+    .mobile-nav-item:hover {
+        background: rgba(85, 85, 85, 0.4);
+        border-left-color: #a0a0a0;
+        color: #ffffff;
+        transform: translateX(15px);
+        box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.2);
     }
     
     .hero {
@@ -1099,6 +1159,20 @@ body {
     .lore-text, .email-section {
         padding: 1.5rem;
     }
+    
+    /* Ajustes adicionales para pantallas muy pequeñas */
+    .mobile-menu-header {
+        padding: 1rem;
+    }
+    
+    .mobile-logo {
+        font-size: 1.2rem;
+    }
+    
+    .mobile-nav-item {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+    }
 }
 
 /* ===== ACCESSIBILITY ===== */
@@ -1118,8 +1192,82 @@ body {
 .email-submit:focus,
 .amount-btn:focus,
 .donation-link:focus,
-.modal-close:focus {
-    outline: 2px solid #ff6b6b;
+.modal-close:focus,
+.mobile-nav-item:focus,
+.hamburger:focus {
+    outline: 2px solid #c0c0c0;
     outline-offset: 2px;
 }
 
+/* ===== EFECTOS ADICIONALES PARA DARK FANTASY ===== */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+    pointer-events: none;
+}
+
+/* Efecto de brillo sutil en elementos interactivos */
+.nav-item,
+.social-link,
+.footer-link,
+.coming-soon,
+.email-submit,
+.amount-btn {
+    box-shadow: 0 0 0 rgba(128, 128, 128, 0);
+    transition: all 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-item:hover,
+.social-link:hover,
+.footer-link:hover,
+.coming-soon:hover,
+.email-submit:hover,
+.amount-btn:hover {
+    box-shadow: 0 0 20px rgba(128, 128, 128, 0.2);
+}
+
+/* Mejora visual para el menú móvil overlay */
+@media (max-width: 768px) {
+    .mobile-menu-overlay {
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(25px);
+    }
+    
+    .mobile-menu-content {
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.8);
+        border-left: 4px solid #808080;
+    }
+}
+
+/* ===== EFECTOS DE NIEBLA MISTERIOSA ===== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(64, 64, 64, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(96, 96, 96, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 40% 90%, rgba(48, 48, 48, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Sombras más dramáticas para elementos principales */
+.game-title {
+    text-shadow: 
+        0 0 10px rgba(192, 192, 192, 0.5),
+        0 0 20px rgba(128, 128, 128, 0.3),
+        0 0 30px rgba(96, 96, 96, 0.2);
+}
+
+.section-title {
+    text-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+}
