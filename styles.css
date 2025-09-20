@@ -983,12 +983,19 @@ body {
         display: block;
     }
     
-    .logo,
+   .logo,
     .game-title,
     .section-title,
-    .modal-title {
+    .modal-title,
+    .mobile-logo,
+    .news-title,
+    .studio-name {
         font-family: 'Arial', sans-serif !important;
         font-weight: bold;
+    }
+    
+    body {
+        font-family: 'Arial', sans-serif !important;
     }
     
     .nav-container {
