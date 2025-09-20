@@ -983,6 +983,14 @@ body {
         display: block;
     }
     
+    .logo,
+    .game-title,
+    .section-title,
+    .modal-title {
+        font-family: 'Arial', sans-serif !important;
+        font-weight: bold;
+    }
+    
     .nav-container {
         padding: 0 1rem;
     }
