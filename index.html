@@ -55,6 +55,7 @@
                             <span class="nav-text">Donar y beneficios</span>
                         </li>
                         <li class="mobile-nav-item" onclick="scrollToSection('team'); closeMobileMenu()">
+
                             <span class="nav-text">Ayudanos y unete a nosotros</span>
                         </li>
                     </ul>
@@ -207,42 +208,11 @@ El destino no es obedecer… el destino es elegir.
                 <h2 class="modal-title">Apoya el Proyecto</h2>
                 <button class="modal-close" onclick="closeModal('donationModal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <p class="donation-description">Tu apoyo nos ayuda a crear un juego unico e increible</p>
-                
-                <div class="donation-amount">
-                    <button class="amount-btn" onclick="selectAmount(this, 5)">$5 USD</button>
-                    <button class="amount-btn" onclick="selectAmount(this, 10)">$10 USD</button>
-                    <button class="amount-btn" onclick="selectAmount(this, 25)">$25 USD</button>
-                    <button class="amount-btn" onclick="selectAmount(this, 50)">$50 USD</button>
-                </div>
-                
-                <div class="donation-input-group">
-                    <label for="donationLink">Link de Donación:</label>
-                    <input type="url" class="donation-link" placeholder="PayPal, Nequi, Patreon, etc." id="donationLink">
-                </div>
-                
-                <button class="email-submit donation-btn" onclick="processDonation()">Realizar Donación</button>
-                
-                <div class="rewards-section">
-                    <h3>🎁 Recompensas por Donación:</h3>
-                    <div class="reward-tier">
-                        <span class="reward-amount">$5+</span>
-                        <span class="reward-description">Acceso Beta Temprano</span>
-                    </div>
-                    <div class="reward-tier">
-                        <span class="reward-amount">$10+</span>
-                        <span class="reward-description">Skin Exclusiva "Sombra Dorada"</span>
-                    </div>
-                    <div class="reward-tier">
-                        <span class="reward-amount">$25+</span>
-                        <span class="reward-description">Arma Legendaria "Nightmare Blade"</span>
-                    </div>
-                    <div class="reward-tier">
-                        <span class="reward-amount">$50+</span>
-                        <span class="reward-description">Créditos + Mascota Única "Shadow Wolf"</span>
-                    </div>
-                </div>
+            <div class="modal-body" style="text-align:center;">
+                <p class="donation-description">Tu apoyo nos ayuda a crear un juego único e increíble.</p>
+                <a href="https://patreon.com/Darknessdevs?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" class="email-submit donation-btn" style="font-size:1.3rem;">
+                    Donar en Patreon
+                </a>
             </div>
         </div>
     </div>
@@ -278,6 +248,7 @@ El destino no es obedecer… el destino es elegir.
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
