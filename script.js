@@ -1,7 +1,7 @@
 const firebaseConfig = {
     apiKey: "tu-api-key-real-aqui",
     authDomain: "tu-project-id.firebaseapp.com", 
-    databaseURL: "https://musicmatch-7c8eb-default-rtdb.firebaseio.com/",
+    databaseURL: "https://el-silencio-de-los-dioses-default-rtdb.firebaseio.com",
     projectId: "tu-project-id",
     storageBucket: "tu-project-id.appspot.com",
     messagingSenderId: "123456789",
@@ -751,3 +751,4 @@ function addHoverEffects() {
         });
     });
 }
+
